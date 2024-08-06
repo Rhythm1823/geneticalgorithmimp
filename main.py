@@ -27,7 +27,7 @@ def main():
     label_mapping = {chr(65 + i): LABELS[i] for i in range(len(LABELS))}
     
     # Set the parameters
-    population_size = 100
+    population_size = 200
     mutation_rate = 0.01
     elite_size = 20
     crossover_rate = 0.6
@@ -35,7 +35,7 @@ def main():
     # Initialize Genetic Algorithm
     ga = GeneticAlgorithm(delivery_points, population_size, mutation_rate, elite_size, crossover_rate)
     
-    generations = 500
+    generations = 50
     progress = []
     
     # Start time
@@ -62,6 +62,16 @@ def main():
     print("\nLabel Mapping:")
     for abbr, full_name in label_mapping.items():
         print(f"{abbr} = {full_name}")
+
+    # Print the order of nodes visited in the best route with labels
+    print("\nOrder of nodes visited in the best route:")
+    for loc in best_route.locations:
+        # Find the index of the location in DELIVERY_POINTS
+        idx = DELIVERY_POINTS.index(loc)
+        # Print the label and original name for the location
+        label = chr(65 + idx)
+        original_name = LABELS[idx]
+        print(f"{label} = {original_name}")
 
 if __name__ == "__main__":
     main()

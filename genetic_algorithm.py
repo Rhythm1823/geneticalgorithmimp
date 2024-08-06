@@ -2,23 +2,18 @@ import random
 from route import Route
 
 class GeneticAlgorithm:
-    def __init__(self, locations, population_size, mutation_rate, elite_size, start_location=None):
+    def __init__(self, locations, population_size, mutation_rate, elite_size, crossover_rate):
         self.locations = locations
         self.population_size = population_size
         self.mutation_rate = mutation_rate
         self.elite_size = elite_size
-        self.start_location = start_location
+        self.crossover_rate = crossover_rate
         self.population = self.initialize_population()
     
     def initialize_population(self):
         population = []
         for _ in range(self.population_size):
-            if self.start_location:
-                remaining_locations = [loc for loc in self.locations if loc != self.start_location]
-                random_route = [self.start_location] + random.sample(remaining_locations, len(remaining_locations))
-            else:
-                random_route = random.sample(self.locations, len(self.locations))
-            population.append(Route(random_route))
+            population.append(Route(random.sample(self.locations, len(self.locations))))
         return population
     
     def evolve_population(self):
@@ -26,7 +21,10 @@ class GeneticAlgorithm:
         while len(new_population) < self.population_size:
             parent1 = self.tournament_selection()
             parent2 = self.tournament_selection()
-            child = self.crossover(parent1, parent2)
+            if random.random() < self.crossover_rate:
+                child = self.crossover(parent1, parent2)
+            else:
+                child = Route(parent1.locations[:])
             self.mutate(child)
             new_population.append(child)
         self.population = new_population
